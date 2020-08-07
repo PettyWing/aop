@@ -1,4 +1,4 @@
-package com.example.aop2;
+package com.example.aspectj;
 
 import android.util.Log;
 

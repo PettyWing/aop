@@ -4,14 +4,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -73,6 +78,52 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        RecyclerView recyclerView = findViewById(R.id.list);
+        recyclerView.setAdapter(new RecyclerViewAdapter());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                Log.d(TAG, "onScrolled: dx--" + dx + ";dy--" + dy);
+//            }
+//        });
+
+    }
+
+    private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.simple_list_item, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.textView.setText("第" + position + "行数据");
+        }
+
+        @Override
+        public int getItemCount() {
+            return 10;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            TextView textView;
+
+            private ViewHolder(View itemView) {
+                super(itemView);
+                textView = (TextView) itemView.findViewById(R.id.list_title);
+            }
+        }
     }
 
     public void onTestClick(View view) {

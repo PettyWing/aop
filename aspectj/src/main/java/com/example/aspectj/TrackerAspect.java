@@ -59,28 +59,6 @@ public class TrackerAspect {
         Log.e(TAG, "afterOnCheckChangeMethodCall -> ContentDescription:" + view.getContentDescription());
     }
 
-    /**
-     * 监控文本输入事件
-     */
-    @Pointcut
-//    @After("execution(* android.widget.EditText.setText(..))")
-    @After("execution(* android.text.TextWatcher.onTextChanged(..))")
-    public void afterOnTextChangedMethodCall(JoinPoint joinPoint) {
-        // TODO: 2020/8/17 拿到他的contentDescription
-        // 方法的几个参数
-        Object[] args = joinPoint.getArgs();
-        Log.e(TAG, "afterOnTextChangedMethodCall -> CharSequence:" + args[0]);
-        Log.e(TAG, "afterOnTextChangedMethodCall getTarget->" + joinPoint.getTarget().toString());// 被切面的animal对象
-        Log.e(TAG, "afterOnTextChangedMethodCall getThis->" + joinPoint.getThis()); //切面代码运行所在的类对象
-        Log.e(TAG, "afterOnTextChangedMethodCall getKind->" + joinPoint.getKind());//切面的类型 method-call
-        Log.e(TAG, "afterOnTextChangedMethodCall getSourceLocation->" + joinPoint.getSourceLocation());//源码位置 MainActivity.java:26
-        Log.e(TAG, "afterOnTextChangedMethodCall getDeclaringTypeName->" + joinPoint.getSignature().getDeclaringTypeName());//com.wandering.sample.aspectj.Animal
-        Log.e(TAG, "afterOnTextChangedMethodCall getModifiers->" + joinPoint.getSignature().getModifiers());//方法修饰符 1--public
-        Log.e(TAG, "afterOnTextChangedMethodCall getName->" + joinPoint.getSignature().getName());//方法名 run
-        Log.e(TAG, "afterOnTextChangedMethodCall getDeclaringType->" + joinPoint.getSignature().getDeclaringType());//Animal.class
-    }
-
-
     int scrollerState = 0;
     int scrollerX = 0;
     int scrollerY = 0;

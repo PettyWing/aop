@@ -3,6 +3,8 @@ package com.example.aspectj;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.ContentFrameLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,16 @@ public class ViewPath {
      */
     public static void setViewTracker(View view) {
         view.setContentDescription(getPath(view));
+        view.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public void sendAccessibilityEvent(View host, int eventType) {
+                super.sendAccessibilityEvent(host, eventType);
+                // TODO: 2020/8/18 输入的方法通过TextWatch拿不到View对象，暂时通过该方法获取
+                if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
+                    Log.d("TrackerAspect", "postUTSendKey: " + host.getContentDescription() + "|value:" + ((TextView) host).getText().toString());
+                }
+            }
+        });
         Log.d(TAG, "setViewTracker: " + view.getContentDescription());
         if (view instanceof ViewGroup) {
             int childCount = ((ViewGroup) view).getChildCount();
@@ -133,5 +145,4 @@ public class ViewPath {
         }
         return -1;
     }
-
 }

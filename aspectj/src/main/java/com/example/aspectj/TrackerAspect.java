@@ -1,13 +1,21 @@
 package com.example.aspectj;
 
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static android.view.Window.ID_ANDROID_CONTENT;
 
 /**
  * @author youer
@@ -25,15 +33,8 @@ public class TrackerAspect {
     @After("execution(* android.view.View.OnClickListener+.onClick(..))")
     public void afterOnClickMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        Log.e(TAG, "afterOnClickMethodCall -> view:" + args[0]);
-        Log.e(TAG, "afterOnClickMethodCall getTarget->" + joinPoint.getTarget().toString());// 被切面的animal对象
-        Log.e(TAG, "afterOnClickMethodCall getThis->" + joinPoint.getThis()); //切面代码运行所在的类对象
-        Log.e(TAG, "afterOnClickMethodCall getKind->" + joinPoint.getKind());//切面的类型 method-call
-        Log.e(TAG, "afterOnClickMethodCall getSourceLocation->" + joinPoint.getSourceLocation());//源码位置 MainActivity.java:26
-        Log.e(TAG, "afterOnClickMethodCall getDeclaringTypeName->" + joinPoint.getSignature().getDeclaringTypeName());//com.wandering.sample.aspectj.Animal
-        Log.e(TAG, "afterOnClickMethodCall getModifiers->" + joinPoint.getSignature().getModifiers());//方法修饰符 1--public
-        Log.e(TAG, "afterOnClickMethodCall getName->" + joinPoint.getSignature().getName());//方法名 run
-        Log.e(TAG, "afterOnClickMethodCall getDeclaringType->" + joinPoint.getSignature().getDeclaringType());//Animal.class
+        View view = (View) args[0];
+        Log.e(TAG, "afterOnClickMethodCall -> ContentDescription:" + view.getContentDescription());
     }
 
     /**
@@ -43,15 +44,8 @@ public class TrackerAspect {
     @After("execution(* android.view.View.OnLongClickListener+.onLongClick(..))")
     public void afterOnLongClickMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        Log.e(TAG, "afterOnLongClickMethodCall -> view:" + args[0]);
-        Log.e(TAG, "afterOnLongClickMethodCall getTarget->" + joinPoint.getTarget().toString());// 被切面的animal对象
-        Log.e(TAG, "afterOnLongClickMethodCall getThis->" + joinPoint.getThis()); //切面代码运行所在的类对象
-        Log.e(TAG, "afterOnLongClickMethodCall getKind->" + joinPoint.getKind());//切面的类型 method-call
-        Log.e(TAG, "afterOnLongClickMethodCall getSourceLocation->" + joinPoint.getSourceLocation());//源码位置 MainActivity.java:26
-        Log.e(TAG, "afterOnLongClickMethodCall getDeclaringTypeName->" + joinPoint.getSignature().getDeclaringTypeName());//com.wandering.sample.aspectj.Animal
-        Log.e(TAG, "afterOnLongClickMethodCall getModifiers->" + joinPoint.getSignature().getModifiers());//方法修饰符 1--public
-        Log.e(TAG, "afterOnLongClickMethodCall getName->" + joinPoint.getSignature().getName());//方法名 run
-        Log.e(TAG, "afterOnLongClickMethodCall getDeclaringType->" + joinPoint.getSignature().getDeclaringType());//Animal.class
+        View view = (View) args[0];
+        Log.e(TAG, "afterOnLongClickMethodCall -> ContentDescription:" + view.getContentDescription());
     }
 
     /**
@@ -61,24 +55,18 @@ public class TrackerAspect {
     @After("execution(* android.widget.CompoundButton.OnCheckedChangeListener+.onCheckedChanged(..))")
     public void afterOnCheckChangeMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        Log.e(TAG, "afterOnCheckChangeMethodCall -> view:" + args[0]);
-        Log.e(TAG, "afterOnCheckChangeMethodCall -> isChecked:" + args[1]);
-        Log.e(TAG, "afterOnCheckChangeMethodCall getTarget->" + joinPoint.getTarget().toString());// 被切面的animal对象
-        Log.e(TAG, "afterOnCheckChangeMethodCall getThis->" + joinPoint.getThis()); //切面代码运行所在的类对象
-        Log.e(TAG, "afterOnCheckChangeMethodCall getKind->" + joinPoint.getKind());//切面的类型 method-call
-        Log.e(TAG, "afterOnCheckChangeMethodCall getSourceLocation->" + joinPoint.getSourceLocation());//源码位置 MainActivity.java:26
-        Log.e(TAG, "afterOnCheckChangeMethodCall getDeclaringTypeName->" + joinPoint.getSignature().getDeclaringTypeName());//com.wandering.sample.aspectj.Animal
-        Log.e(TAG, "afterOnCheckChangeMethodCall getModifiers->" + joinPoint.getSignature().getModifiers());//方法修饰符 1--public
-        Log.e(TAG, "afterOnCheckChangeMethodCall getName->" + joinPoint.getSignature().getName());//方法名 run
-        Log.e(TAG, "afterOnCheckChangeMethodCall getDeclaringType->" + joinPoint.getSignature().getDeclaringType());//Animal.class
+        View view = (View) args[0];
+        Log.e(TAG, "afterOnCheckChangeMethodCall -> ContentDescription:" + view.getContentDescription());
     }
 
     /**
      * 监控文本输入事件
      */
     @Pointcut
+//    @After("execution(* android.widget.EditText.setText(..))")
     @After("execution(* android.text.TextWatcher.onTextChanged(..))")
     public void afterOnTextChangedMethodCall(JoinPoint joinPoint) {
+        // TODO: 2020/8/17 拿到他的contentDescription
         // 方法的几个参数
         Object[] args = joinPoint.getArgs();
         Log.e(TAG, "afterOnTextChangedMethodCall -> CharSequence:" + args[0]);
@@ -157,7 +145,7 @@ public class TrackerAspect {
                 // 当页面滚动停止的时候进行数据上报，并且置零参数1
                 Log.d(TAG, "afterRecycleViewOnScrollStateChangedMethodCall: " + scrollerX);
                 Log.d(TAG, "afterRecycleViewOnScrollStateChangedMethodCall: " + scrollerY);
-                Log.d(TAG, "afterRecycleViewOnScrollStateChangedMethodCall getThis->" + joinPoint.getThis()); //切面代码运行所在的类对象
+                Log.d(TAG, "afterRecycleViewOnScrollStateChangedMethodCall getThis->" + ((RecyclerView) joinPoint.getThis()).getContentDescription()); //切面代码运行所在的类对象
                 scrollerX = 0;
                 scrollerY = 0;
                 break;
@@ -179,4 +167,55 @@ public class TrackerAspect {
             scrollerY += (int) args[1];
         }
     }
+
+//    @Pointcut
+//    @After("execution(* android.view.View+.onLayout(..))")
+//    public void onCallViewLifecycle(JoinPoint joinPoint) {
+//        if (joinPoint.getThis() instanceof View || joinPoint.getThis() instanceof ViewGroup) {
+//            setContentDescription((View) joinPoint.getThis());
+//        }
+//        Log.e(TAG, "onCallViewLifecycle getThis->" + joinPoint.getThis().getClass().getSimpleName());
+//    }
+
+    /**
+     * 初始化布局的监控
+     *
+     * @param joinPoint
+     */
+    @Pointcut
+    @After("execution(* androidx.appcompat.app.AppCompatDelegate+.setContentView(..))")
+    public void onCallActivityLifecycle(JoinPoint joinPoint) {
+        ViewGroup rootView = ((AppCompatDelegate) joinPoint.getThis()).findViewById(ID_ANDROID_CONTENT);
+        if (rootView != null) {
+            ViewPath.setViewTracker(rootView.getChildAt(0));
+        }
+    }
+
+    /**
+     * 初始化布局的监控
+     *
+     * @param joinPoint
+     */
+    @Pointcut
+    @After("execution(* androidx.recyclerview.widget.RecyclerView.Adapter.onBindViewHolder(..))")
+    public void afterRecycleAdapterOnBind(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        // 获取listView对象
+        try {
+            HashMap<String, Field> fieldMap = new HashMap<>();
+            Class tempClass = args[0].getClass();
+            while (tempClass != null) {//当父类为null的时候说明到达了最上层的父类(Object类).
+                for (Field field : tempClass.getDeclaredFields()) {
+                    fieldMap.put(field.getName(), field);
+                }
+                tempClass = tempClass.getSuperclass(); //得到父类,然后赋给自己
+            }
+            Field recyclerViewField = fieldMap.get("mOwnerRecyclerView");
+            recyclerViewField.setAccessible(true);
+            ViewPath.setRecycleViewTracker(((RecyclerView.ViewHolder) args[0]).itemView, (RecyclerView) recyclerViewField.get(args[0]), (Integer) args[1]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

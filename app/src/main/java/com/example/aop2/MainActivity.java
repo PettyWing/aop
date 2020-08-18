@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         Animal animal = new Animal();
         Log.d(TAG, " onCreate fly start...");
         animal.fly();
+
+//        ViewGroup viewGroup = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
+//        viewGroup.getChildCount();
 //        TextView textView = findViewById(R.id.text);
 //        textView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -35,23 +38,20 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        TextView textView = new TextView(this);
-        textView.setText("sfdadasdas");
-        LinearLayout layout = findViewById(R.id.container);
-        layout.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
-            }
-        });
 
-        textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return false;
-            }
-        });
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: ");
+//            }
+//        });
+//
+//        textView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                return false;
+//            }
+//        });
 
         CheckBox checkBox = findViewById(R.id.checkbox);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
         @NonNull
@@ -109,6 +110,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.textView.setText("第" + position + "行数据");
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
         @Override
@@ -127,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTestClick(View view) {
+        TextView textView = new TextView(this);
+        textView.setText("sfdadasdas");
+        LinearLayout layout = findViewById(R.id.container);
+        layout.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         Log.d(TAG, "onTestClick: ");
     }
 

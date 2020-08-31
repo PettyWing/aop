@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ public class TrackerAspect {
     /**
      * 监控OnClick点击事件
      */
-    @Pointcut
     @After("execution(* android.view.View.OnClickListener+.onClick(..))")
     public void afterOnClickMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
@@ -40,7 +38,6 @@ public class TrackerAspect {
     /**
      * 监控OnLongClick点击事件
      */
-    @Pointcut
     @After("execution(* android.view.View.OnLongClickListener+.onLongClick(..))")
     public void afterOnLongClickMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
@@ -51,7 +48,6 @@ public class TrackerAspect {
     /**
      * 监控OnCheckChange点击事件
      */
-    @Pointcut
     @After("execution(* android.widget.CompoundButton.OnCheckedChangeListener+.onCheckedChanged(..))")
     public void afterOnCheckChangeMethodCall(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
@@ -68,7 +64,6 @@ public class TrackerAspect {
      *
      * @param joinPoint
      */
-    @Pointcut
     @After("call(* android.support.v7.widget.RecyclerView.onScrollStateChanged(..))")
     public void afterRecycleViewOnScrollStateChangedMethodCall1(JoinPoint joinPoint) {
         // 方法的几个参数
@@ -92,7 +87,6 @@ public class TrackerAspect {
     /**
      * 监控RecycleView的滑动事件
      */
-    @Pointcut
     @After("call(* android.support.v7.widget.RecyclerView.onScrolled(..))")
     public void afterRecycleViewOnScrolledMethodCall1(JoinPoint joinPoint) {
         // 方法的几个参数
@@ -109,7 +103,6 @@ public class TrackerAspect {
      *
      * @param joinPoint
      */
-    @Pointcut
     @After("call(* androidx.recyclerview.widget.RecyclerView.onScrollStateChanged(..))")
     public void afterRecycleViewOnScrollStateChangedMethodCall(JoinPoint joinPoint) {
         // 方法的几个参数
@@ -134,7 +127,6 @@ public class TrackerAspect {
     /**
      * 监控RecycleView的滑动事件
      */
-    @Pointcut
     @After("call(* androidx.recyclerview.widget.RecyclerView.onScrolled(..))")
     public void afterRecycleViewOnScrolledMethodCall(JoinPoint joinPoint) {
         // 方法的几个参数
@@ -160,9 +152,9 @@ public class TrackerAspect {
      *
      * @param joinPoint
      */
-    @Pointcut
     @After("execution(* androidx.appcompat.app.AppCompatDelegate+.setContentView(..))")
     public void onCallActivityLifecycle(JoinPoint joinPoint) {
+        Log.d(TAG, "onCallActivityLifecycle: ");
         ViewGroup rootView = ((AppCompatDelegate) joinPoint.getThis()).findViewById(ID_ANDROID_CONTENT);
         if (rootView != null) {
             ViewPath.setViewTracker(rootView.getChildAt(0));
@@ -174,7 +166,6 @@ public class TrackerAspect {
      *
      * @param joinPoint
      */
-    @Pointcut
     @After("execution(* androidx.recyclerview.widget.RecyclerView.Adapter.onBindViewHolder(..))")
     public void afterRecycleAdapterOnBind(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();

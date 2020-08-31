@@ -1,22 +1,26 @@
 package com.example.aop2;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.aop2.hock.Tracker;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static android.view.Window.ID_ANDROID_CONTENT;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -25,9 +29,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Tracker.startViewTracker(this);
+
         Animal animal = new Animal();
         Log.d(TAG, " onCreate fly start...");
         animal.fly();
+
+
+        View rootView = findViewById(ID_ANDROID_CONTENT);
+        while (rootView != null) {
+            rootView = (View) rootView.getParent();
+            Log.d(TAG, "onCreate: " + rootView);
+        }
+
+        final AppCompatDialog dialog = new AppCompatDialog(this);
+        dialog.setContentView(R.layout.dialog);
 
 //        ViewGroup viewGroup = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
 //        viewGroup.getChildCount();
@@ -53,13 +70,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        CheckBox checkBox = findViewById(R.id.checkbox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.d(TAG, "onCheckedChanged: ");
-            }
-        });
 
         EditText editText = findViewById(R.id.edit);
         editText.addTextChangedListener(new TextWatcher() {
@@ -82,33 +92,55 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.list);
         recyclerView.setAdapter(new RecyclerViewAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                Log.d(TAG, "onScrolled: dx--" + dx + ";dy--" + dy);
-//            }
-//        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.d(TAG, "onScrolled: dx--" + dx + ";dy--" + dy);
+            }
+        });
+
+        final TextView title = findViewById(R.id.title);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: ");
+                title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.show();
+                        View rootView = dialog.getWindow().getDecorView();
+                        while (rootView != null) {
+                            rootView = (View) rootView.getParent();
+                            Log.d(TAG, "onCreate: " + rootView);
+                        }
+                        Log.d(TAG, "onClick: ");
+                    }
+                });
+            }
+        }, 1500);
 
     }
 
-
     private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+        private static final String TAG = "RecyclerViewAdapter";
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.simple_list_item, parent, false);
+            Log.d(TAG, "onCreateViewHolder: ");
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            Log.d(TAG, "onBindViewHolder: ");
             holder.textView.setText("第" + position + "行数据");
             holder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,11 +166,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTestClick(View view) {
+//        CheckBox checkBox = findViewById(R.id.checkbox);
+//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Log.d(TAG, "onCheckedChanged: ");
+//            }
+//        });
+
         TextView textView = new TextView(this);
         textView.setText("sfdadasdas");
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: ");
+            }
+        });
         LinearLayout layout = findViewById(R.id.container);
-        layout.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        Log.d(TAG, "onTestClick: ");
+        layout.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT, 200);
     }
 
 }

@@ -21,22 +21,22 @@ public class TrackerAspect {
 
     private static final String TAG = "TrackerAspect";
 
-    @After("execution(* android.app.Activity+.onResume(..))")
+    @After("execution(* android.app.Activity+.onCreate(..))")
     public void onActivityResume(JoinPoint joinPoint) {
         Log.d(TAG, "onActivityResume: ");
         Tracker.startViewTracker((Activity) joinPoint.getThis());
     }
 
-    @After("execution(* android.app.Dialog+.onCreate(..))")
+    @After("call(* android.app.Dialog+.show(..))")
     public void onDialogShow(JoinPoint joinPoint) {
-        Log.d(TAG, "onDialogShow: ");
-        Dialog dialog = (Dialog) joinPoint.getThis();
+        Log.d(TAG, "onDialogShow: " + joinPoint.getSignature().getName());
+        Dialog dialog = (Dialog) joinPoint.getTarget();
         Tracker.startViewTracker(dialog.getWindow().getDecorView());
     }
 
     @After("call(* android.widget.PopupWindow+.showAsDropDown(..))")
     public void onPopupWindowShow(JoinPoint joinPoint) {
-        Log.d(TAG, "onPopupWindowShow: ");
+        Log.d(TAG, "onPopupWindowShow: " + joinPoint.getSignature().getName());
         PopupWindow popupWindow = (PopupWindow) joinPoint.getTarget();
         try {
             Field field = SuperClassReflectionUtils.getDeclaredField(popupWindow, "mDecorView");

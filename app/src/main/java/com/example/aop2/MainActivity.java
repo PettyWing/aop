@@ -1,5 +1,6 @@
 package com.example.aop2;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -99,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popWnd.showAsDropDown(title);
+                        Dialog dialog = new Dialog(MainActivity.this);
+                        dialog.setContentView(R.layout.dialog);
+                        dialog.show();
+//                        popWnd.showAsDropDown(title);
                     }
                 });
             }

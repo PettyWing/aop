@@ -1,11 +1,11 @@
 package com.example.aspectj;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author youer

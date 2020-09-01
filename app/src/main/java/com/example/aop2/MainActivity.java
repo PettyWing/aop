@@ -1,7 +1,12 @@
 package com.example.aop2;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,12 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
     @Override
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         Animal animal = new Animal();
         Log.d(TAG, " onCreate fly start...");
         animal.fly();
-
 //        ViewGroup viewGroup = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
 //        viewGroup.getChildCount();
 //        TextView textView = findViewById(R.id.text);
@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog, null);
         final PopupWindow popWnd = new PopupWindow(this);
         popWnd.setContentView(contentView);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
 
         EditText editText = findViewById(R.id.edit);
         editText.addTextChangedListener(new TextWatcher() {
@@ -99,12 +102,15 @@ public class MainActivity extends AppCompatActivity {
                 title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popWnd.showAsDropDown(title);
+                        dialog.show();
+//                        popWnd.showAsDropDown(title);
+//                        popWnd.showAsDropDown(title);
                     }
                 });
             }
         }, 1500);
 
+//
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {

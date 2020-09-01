@@ -1,11 +1,10 @@
 package com.example.aspectj;
 
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.widget.ContentFrameLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -56,7 +55,7 @@ public class ViewPath {
         if (view == null) {
             return parentPath;
         }
-        if (view.getParent() instanceof ContentFrameLayout) {
+        if (view.getParent() == null) {
             parentPath = "rootView";
         } else {
             parentPath = String.valueOf(recyclerView.getContentDescription());

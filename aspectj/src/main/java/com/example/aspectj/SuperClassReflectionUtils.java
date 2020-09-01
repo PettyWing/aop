@@ -1,4 +1,4 @@
-package com.example.aop2.hock;
+package com.example.aspectj;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

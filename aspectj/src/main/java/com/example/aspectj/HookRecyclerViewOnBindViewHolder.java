@@ -1,4 +1,4 @@
-package com.example.aop2.hock;
+package com.example.aspectj;
 
 import android.view.ViewGroup;
 

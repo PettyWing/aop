@@ -10,17 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import com.example.aop2.hock.Tracker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import static android.view.Window.ID_ANDROID_CONTENT;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -30,21 +26,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Tracker.startViewTracker(this);
-
         Animal animal = new Animal();
         Log.d(TAG, " onCreate fly start...");
         animal.fly();
-
-
-        View rootView = findViewById(ID_ANDROID_CONTENT);
-        while (rootView != null) {
-            rootView = (View) rootView.getParent();
-            Log.d(TAG, "onCreate: " + rootView);
-        }
-
-        final AppCompatDialog dialog = new AppCompatDialog(this);
-        dialog.setContentView(R.layout.dialog);
 
 //        ViewGroup viewGroup = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
 //        viewGroup.getChildCount();
@@ -69,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
 //                return false;
 //            }
 //        });
-
+        View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog, null);
+        final PopupWindow popWnd = new PopupWindow(this);
+        popWnd.setContentView(contentView);
 
         EditText editText = findViewById(R.id.edit);
         editText.addTextChangedListener(new TextWatcher() {
@@ -113,13 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.show();
-                        View rootView = dialog.getWindow().getDecorView();
-                        while (rootView != null) {
-                            rootView = (View) rootView.getParent();
-                            Log.d(TAG, "onCreate: " + rootView);
-                        }
-                        Log.d(TAG, "onClick: ");
+                        popWnd.showAsDropDown(title);
                     }
                 });
             }

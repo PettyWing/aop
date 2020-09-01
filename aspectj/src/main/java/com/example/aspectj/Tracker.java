@@ -1,4 +1,4 @@
-package com.example.aop2.hock;
+package com.example.aspectj;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import static android.view.Window.ID_ANDROID_CONTENT;
 
 /**
  * @author youer
@@ -22,18 +20,7 @@ public class Tracker {
      * @param activity
      */
     public static void startViewTracker(Activity activity) {
-        startViewTracker(activity, "rootView");
-    }
-
-    /**
-     * 开始进行页面的埋点，获取页面的根布局
-     *
-     * @param activity
-     */
-    public static void startViewTracker(Activity activity, String parentContentDescription) {
-        ViewGroup rootView = activity.findViewById(ID_ANDROID_CONTENT);
-        rootView.setContentDescription(parentContentDescription);
-        setViewTracker(rootView.getChildAt(0));
+        startViewTracker(activity.getWindow().getDecorView());
     }
 
     public static void startViewTracker(View view) {

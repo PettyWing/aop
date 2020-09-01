@@ -1,4 +1,4 @@
-package com.example.aop2.hock;
+package com.example.aspectj;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,10 +27,16 @@ public class HookTextChangedListener {
                 }
             }
         }
-        editText.addTextChangedListener(new HookTextWatcher());
+        editText.addTextChangedListener(new HookTextWatcher(editText));
     }
 
     static class HookTextWatcher implements TextWatcher {
+
+        private EditText editText;
+
+        public HookTextWatcher(EditText editText) {
+            this.editText = editText;
+        }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -39,7 +45,7 @@ public class HookTextChangedListener {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Log.d(TAG, "onTextChanged: " + s);
+            Log.d(TAG, "view:" + editText.getContentDescription() + "\nword:" + s);
         }
 
         @Override

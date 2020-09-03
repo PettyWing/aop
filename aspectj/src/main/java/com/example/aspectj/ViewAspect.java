@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
+import java.lang.reflect.Field;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -180,4 +182,28 @@ public class ViewAspect {
             scrollerY += (int) args[1];
         }
     }
+
+
+    /**
+     * 初始化布局的监控
+     *
+     * @param joinPoint
+     */
+    @After("execution(* androidx.recyclerview.widget.RecyclerView.Adapter.onBindViewHolder(..))")
+    public void afterRecycleAdapterOnBind(JoinPoint joinPoint) {
+        Object[] args = joinPoint.getArgs();
+        RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) args[0];
+        int position = (int) args[1];
+        try {
+            // 获取listView对象
+            Field recyclerViewField = SuperClassReflectionUtils.getDeclaredField(viewHolder, "mOwnerRecyclerView");
+            recyclerViewField.setAccessible(true);
+            RecyclerView recyclerView = (RecyclerView) recyclerViewField.get(viewHolder);
+            // 获取listView对象
+            Tracker.setViewTracker(viewHolder.itemView, ViewPath.getPath(viewHolder.itemView, recyclerView, position));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
